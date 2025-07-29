@@ -11,11 +11,11 @@ public interface IUserService {
 
     ResponseEntity add(UserDto userDto);
 
-//	List<UserDto> findAll();
+    List<UserDto> findAll();
 //
-//	UserDto findById(Long Id);
+	UserDto findById(Long Id);
 //
-//	UserDto getUserByEmail(String email);
+	UserDto getUserByEmail(String email);
 //
 //	UserDto editUserByEmail(String email_address, UserDto userDto);
 
