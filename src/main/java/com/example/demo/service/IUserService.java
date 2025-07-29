@@ -2,6 +2,7 @@ package com.example.demo.service;
 import java.util.List;
 
 import com.example.demo.ResponseEntity;
+import com.example.demo.dto.LoginDto;
 import com.example.demo.dto.UserDto;
 
 
@@ -17,11 +18,11 @@ public interface IUserService {
 //
 	UserDto getUserByEmail(String email);
 //
-//	UserDto editUserByEmail(String email_address, UserDto userDto);
+   UserDto editUserByEmail(String email_address, UserDto userDto);
 
-	//String loginUser(LoginDto loginDto);
+	String loginUser(LoginDto loginDto);
 
-//	UserDto logout(String token);
+    UserDto logout(String token);
 //
 //
 //	String resetPassword(UserDto userDto);

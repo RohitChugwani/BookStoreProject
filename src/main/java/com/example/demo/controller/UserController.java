@@ -6,11 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.ResponseEntity;
+import com.example.demo.dto.LoginDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.service.IUserService;
 
@@ -27,7 +30,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/insertUser")
-	public ResponseEntity AddAddressDetails(@RequestBody UserDto userDto) {
+	public ResponseEntity AddUser(@RequestBody UserDto userDto) {
 		ResponseEntity user = userService.add(userDto);
 		return new ResponseEntity(user, "User added succesfully");
 	}
@@ -48,6 +51,24 @@ public class UserController {
 	public ResponseEntity getDataByEmail(@PathVariable String email) {
 		UserDto user = userService.getUserByEmail(email);
 		return new ResponseEntity(user, "Find successfully");
+	}
+	
+	@PutMapping("/edit/{email_address}")
+	public ResponseEntity updateByEmail(@PathVariable String email_address, @RequestBody UserDto userDto) {
+		UserDto user = userService.editUserByEmail(email_address, userDto);
+		return new ResponseEntity(user, "Updated successfully");
+	}
+
+	@PostMapping("/login")
+	public ResponseEntity loginUser(@RequestBody LoginDto loginDto) {
+		String login = userService.loginUser(loginDto);
+		return new ResponseEntity(login, "Login successfully");
+	}
+
+	@GetMapping("/logout")
+	public ResponseEntity logout(@RequestHeader String token) {
+		UserDto logout = userService.logout(token);
+		return new ResponseEntity(logout, "Logout successfully");
 	}
 
 
