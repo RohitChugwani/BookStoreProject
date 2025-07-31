@@ -8,13 +8,15 @@ public interface IBookService {
 
 	BookDto addBook(BookDto bookDto);
 
-//	List<BookDto> getAllBook();
-//
-//	BookDto findById(Long bookId);
-//
-//	void deleteById(Long bookId);
-//
-//	BookDto findByBookName(String bookName);
-//
-//	BookDto updateData(Long bookId, BookDto bookDto);
+	List<BookDto> getAllBook();
+
+	void deleteById(Long bookId);
+
+	BookDto findById(Long bookId);
+
+	BookDto findByBookName(String bookName);
+
+	BookDto updateData(Long bookId, BookDto bookDto);
+
+
 }
