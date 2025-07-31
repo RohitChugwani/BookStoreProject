@@ -14,6 +14,7 @@ import com.example.demo.dto.UserDto;
 import com.example.demo.exception.BookException;
 import com.example.demo.model.UserModel;
 import com.example.demo.repository.IUserRepo;
+import com.example.demo.utility.EmailService;
 import com.example.demo.utility.JwtUtil;
 
 @Service
@@ -28,11 +29,38 @@ public class UserService implements IUserService {
 	@Autowired
 	JwtUtil jwtTokenUtil;
 	
+	@Autowired
+	EmailService emailService;
+	
 	@Override
 	public  ResponseEntity add(UserDto userDto) {
-		UserModel user = modelMapper.map(userDto, UserModel.class);
-		userRepo.save(user);
-		return new ResponseEntity(userDto,"user added successfully");
+//		UserModel user = modelMapper.map(userDto, UserModel.class);
+//		userRepo.save(user);
+//		return new ResponseEntity(userDto,"user added successfully");
+		
+		try {
+			if (userRepo.findByEmail(userDto.getEmail()).isPresent()) {
+			System.out.println("Registered");
+			throw new BookException("User already exist");
+		} else {
+			System.out.println("Pass1 ");
+		//	String token = jwtTokenUtil.generateToken(userDto.getEmail(), userDto.getPassword());
+		//	System.out.println("Pass2 ");
+			emailService.sendSimpleMail(userDto.getEmail(),  "Verification","User added");
+			System.out.println("Pass3 ");
+			UserModel addUser = modelMapper.map(userDto, UserModel.class);
+			System.out.println("Pass4 ");
+			userRepo.save(addUser);
+			System.out.println("Pass5 ");
+			System.out.println("Registeration is done");
+			return new ResponseEntity(userDto, "user added");
+
+		}
+			
+		} catch (Exception e) {
+			System.out.println("exception"+e);
+		}
+		return null;
 	}
 		
 		
@@ -111,6 +139,38 @@ public class UserService implements IUserService {
 			checkUserDetails.get().setIsLogin(false);
 			userRepo.save(checkUserDetails.get());
 			return logout;
+		}
+
+
+		@Override
+		public String resetPassword(UserDto userDto) {
+			// TODO Auto-generated method stub
+			Optional<UserModel> user = userRepo.findByEmail(userDto.getEmail());
+			String password = userDto.getPassword();
+			if(user.isPresent()) {
+				user.get().setPassword(password);
+				userRepo.save(user.get());
+				return "Password Changed";
+			}else {
+			return "Email doesn't exist" ;
+			
+		}
+		}
+
+
+		@Override
+		public UserDto getUserByLogin(String token) {
+			// TODO Auto-generated method stub
+			 LoginDto loginDto = jwtTokenUtil.decode(token);
+				Optional<UserModel> userModel = userRepo.findByEmailAndPassword(loginDto.getEmail(), loginDto.getPassword());
+				if (userModel.get().getIsLogin().equals(true)) {
+					UserDto userDto = modelMapper.map(userModel.get(), UserDto.class);
+					System.out.println("Get the data successfully ");
+					return userDto;
+				} else {
+					throw new BookException("Data not found");
+				}
+			
 		}
 
 

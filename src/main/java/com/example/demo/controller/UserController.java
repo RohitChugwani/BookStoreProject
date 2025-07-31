@@ -70,6 +70,17 @@ public class UserController {
 		UserDto logout = userService.logout(token);
 		return new ResponseEntity(logout, "Logout successfully");
 	}
+	@PostMapping("/resetPassword")
+	public ResponseEntity resetPassword(@RequestBody UserDto userDto) {
+		String password = userService.resetPassword(userDto);
+		return new ResponseEntity(password, "Reset password successfully");
+	}
+	
+	@GetMapping("/getuserbytoken")
+	public ResponseEntity getUserByLogin(@RequestHeader String token) {
+		UserDto userDto = userService.getUserByLogin(token);
+		return new ResponseEntity(userDto, "Fetched user details");
+	}
 
 
 }
